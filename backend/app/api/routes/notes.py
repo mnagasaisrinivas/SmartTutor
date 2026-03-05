@@ -20,7 +20,7 @@ db_dependency = Annotated[AsyncSession, Depends(get_db)]
 user_dependency = Annotated[User, Depends(get_current_user)]
 
 
-@router.post("/", response_model=StudyNotesResponse)
+@router.post("", response_model=StudyNotesResponse)
 async def generate_notes(
     request_data: StudyNotesRequest, current_user: user_dependency
 ):

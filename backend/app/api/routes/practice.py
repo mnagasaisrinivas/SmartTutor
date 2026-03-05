@@ -13,8 +13,8 @@ router = APIRouter()
 user_dependency = Annotated[User, Depends(get_current_user)]
 
 
-@router.post("/", response_model=PracticeProblemsResponse)
-async def generate_practice(
+@router.post("", response_model=PracticeProblemsResponse)
+async def generate_practice_problems(
     request_data: PracticeProblemsRequest, current_user: user_dependency
 ):
     output = get_practice_problems(request_data.subject, request_data.topic)

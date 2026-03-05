@@ -21,7 +21,7 @@ db_dependency = Annotated[AsyncSession, Depends(get_db)]
 user_dependency = Annotated[User, Depends(get_current_user)]
 
 
-@router.post("/", response_model=QuestionResponse)
+@router.post("", response_model=QuestionResponse)
 async def ask_question(request_data: QuestionRequest, current_user: user_dependency):
     output = await get_structured_explanation(
         request_data.subject, request_data.question
