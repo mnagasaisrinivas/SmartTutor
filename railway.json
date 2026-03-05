@@ -3,7 +3,7 @@
   "services": {
     "backend": {
       "name": "smarttutor-backend",
-      "rootDirectory": "/backend",
+      "rootDirectory": "./backend",
       "build": {
         "builder": "DOCKER",
         "dockerfilePath": "Dockerfile"
@@ -15,7 +15,7 @@
     },
     "frontend": {
       "name": "smarttutor-frontend",
-      "rootDirectory": "/frontend",
+      "rootDirectory": "./frontend",
       "build": {
         "builder": "DOCKER",
         "dockerfilePath": "Dockerfile"
