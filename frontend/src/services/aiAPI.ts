@@ -17,21 +17,21 @@ import {
 
 class AIAPI {
   async generateExplanation(data: QuestionRequest): Promise<QuestionResponse> {
-    const response = await api.post("/api/ask/", data);
+    const response = await api.post("/api/ask", data);
     return response.data;
   }
 
   async generatePracticeProblems(
     data: PracticeProblemsRequest,
   ): Promise<PracticeProblemsResponse> {
-    const response = await api.post("/api/practice/", data);
+    const response = await api.post("/api/practice", data);
     return response.data;
   }
 
   async generateStudyNotes(
     data: StudyNotesRequest,
   ): Promise<StudyNotesResponse> {
-    const response = await api.post("/api/notes/", data);
+    const response = await api.post("/api/notes", data);
     return response.data;
   }
 
