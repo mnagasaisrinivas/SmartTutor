@@ -1,21 +1,17 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel
 
-# ==========================================
-#               RESPONSE MODELS
-# ==========================================
-
 
 class QuestionExplanation(BaseModel):
-    steps: Optional[List[str]] = None
-    title: Optional[str] = None
-    summary: Optional[str] = None
+    title: str
+    steps: List[str]
+    summary: str
 
 
 class QuestionResponse(BaseModel):
     subject: str
-    topic: str
+    question: str
     explanation: QuestionExplanation
 
 

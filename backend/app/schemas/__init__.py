@@ -12,9 +12,10 @@ from .responses import (
     PracticeProblemsResponse,
     QuestionResponse,
     QuizResponse,
+    StudyNotesContent,
     StudyNotesResponse,
 )
-from .saved import SavedNote, SavedQuestion
+from .saved import SavedNoteResponse, SavedQuestionResponse
 
 # Define what is exported when someone does: from app.schemas import *
 __all__ = [
@@ -33,6 +34,8 @@ __all__ = [
     "StudyNotesResponse",
     "QuizResponse",
     # Saved Items
-    "SavedQuestion",
-    "SavedNote",
+    "SavedQuestionResponse",
+    "SavedNoteResponse",
+    # Helper Models
+    "StudyNotesContent",
 ]

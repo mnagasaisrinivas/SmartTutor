@@ -9,7 +9,7 @@ from pydantic import BaseModel
 # ==========================================
 
 
-class SavedQuestion(BaseModel):
+class SavedQuestionResponse(BaseModel):
     id: int
     subject: str
     question_text: str
@@ -21,7 +21,7 @@ class SavedQuestion(BaseModel):
         from_attributes = True  # Allows reading directly from SQLAlchemy models
 
 
-class SavedNote(BaseModel):
+class SavedNoteResponse(BaseModel):
     id: int
     subject: str
     topic: str

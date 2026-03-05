@@ -1,17 +1,18 @@
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
-from app.core.config import Settings
+from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass
+
+from app.core.config import settings
 
 
 # Defining Base class to create all the tables
-class Base(DeclarativeBase):
+class Base(MappedAsDataclass, DeclarativeBase, kw_only=True):
     pass
 
 
 engine = create_async_engine(
-    Settings.DATABASE_URL,
+    settings.DATABASE_URL,
     connect_args={"check_same_thread": False}
-    if "sqlite" in Settings.DATABASE_URL
+    if "sqlite" in settings.DATABASE_URL
     else {},
 )
 
@@ -22,6 +23,7 @@ AsyncSessionLocal = async_sessionmaker(
 
 # Creating DB and Tables asynchronsly
 async def create_db_and_tables():
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 

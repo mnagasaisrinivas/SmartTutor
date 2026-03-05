@@ -4,7 +4,7 @@ from typing import Optional
 import jwt
 from pwdlib import PasswordHash
 
-from .config import Settings
+from .config import settings
 
 # This automatically configures Argon2id with secure defaults
 password_hash = PasswordHash.recommended()
@@ -29,13 +29,13 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
         expire = datetime.now(UTC) + expires_delta
     else:
         expire = datetime.now(UTC) + timedelta(
-            minutes=Settings.ACCESS_TOKEN_EXPIRE_MINUTES
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
         )
 
     to_encode.update({"exp": expire, "type": "access"})
 
     encoded_access_token = jwt.encode(
-        to_encode, Settings.JWT_SECRET_KEY, algorithm=Settings.ALGORITHM
+        to_encode, settings.JWT_SECRET_KEY.get_secret_value(), algorithm=settings.ALGORITHM
     )
     return encoded_access_token
 
@@ -45,12 +45,12 @@ def create_refresh_token(data: dict, expires_delta: timedelta | None = None) -> 
 
     to_encode = data.copy()
 
-    expire = datetime.now(UTC) + timedelta(days=Settings.JWT_REFRESH_TOKEN_EXPIRE_DAYS)
+    expire = datetime.now(UTC) + timedelta(days=settings.JWT_REFRESH_TOKEN_EXPIRE_DAYS)
 
     to_encode.update({"exp": expire, "type": "refresh"})
 
     encoded_refresh_token = jwt.encode(
-        to_encode, Settings.JWT_SECRET_KEY, algorithm=Settings.ALGORITHM
+        to_encode, settings.JWT_SECRET_KEY.get_secret_value(), algorithm=settings.ALGORITHM
     )
     return encoded_refresh_token
 
@@ -62,7 +62,7 @@ def verify_token(token: str) -> Optional[dict]:
     """
     try:
         payload = jwt.decode(
-            token, Settings.JWT_SECRET_KEY, algorithms=[Settings.ALGORITHM]
+            token, settings.JWT_SECRET_KEY.get_secret_value(), algorithms=[settings.ALGORITHM]
         )
         return payload
     except (jwt.PyJWTError, jwt.ExpiredSignatureError):

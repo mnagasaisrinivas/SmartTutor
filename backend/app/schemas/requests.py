@@ -1,10 +1,6 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel, Field
-
-# ==========================================
-#               REQUEST MODELS
-# ==========================================
 
 
 class UserSignUpRequest(BaseModel):
@@ -35,7 +31,7 @@ class StudyNotesRequest(BaseModel):
 
 class QuizRequest(BaseModel):
     subject: str
-    topic: Optional[str] = None
+    topic: str
 
 
 class SaveQuestionRequest(BaseModel):
