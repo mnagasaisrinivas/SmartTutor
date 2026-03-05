@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     proxy: {
       "/api": {
-        target: "http://127.0.0.1:5000",
+        target: "http://127.0.0.1:8000",
         changeOrigin: true,
         secure: false,
       }
@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
   },
 
   build: {
-    outDir: "./output", // Flask will serve from here
+    outDir: "dist",
     emptyOutDir: true, // clean before building
     rollupOptions: {
       input: "./index.html",

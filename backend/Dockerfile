@@ -1,4 +1,5 @@
-FROM python:3.12-slim-bookworm
+# --- Test & Build Stage ---
+FROM python:3.12-slim-bookworm AS builder
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -9,8 +10,29 @@ WORKDIR /app
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install dependencies
+# Install ALL dependencies (including dev for testing)
 RUN uv sync --frozen --no-cache
+
+# Copy application code
+COPY . .
+
+# Run tests and enforce 70% coverage requirement
+RUN uv run pytest --cov=app --cov-fail-under=70
+
+
+# --- Production Stage ---
+FROM python:3.12-slim-bookworm
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
+WORKDIR /app
+
+# Copy dependency files
+COPY pyproject.toml uv.lock ./
+
+# Install ONLY production dependencies
+RUN uv sync --frozen --no-cache --no-dev
 
 # Copy application code
 COPY . .

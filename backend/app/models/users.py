@@ -18,7 +18,7 @@ class User(Base):
 
 class RefreshToken(Base):
     __tablename__ = "refresh_tokens"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True, init=False)
     user_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
@@ -27,5 +27,5 @@ class RefreshToken(Base):
         DateTime(timezone=True), nullable=False
     )
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
+        DateTime(timezone=True), server_default=func.now(), init=False
     )

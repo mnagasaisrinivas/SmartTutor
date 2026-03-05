@@ -1,21 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authAPI } from '@/services/authAPI';
 import { AxiosError } from 'axios';
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (fullName: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
-}
+import { User, AuthContextType } from '@/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -84,15 +70,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = async () => {
+    await authAPI.logout();
     setUser(null);
   };
 
-   // 🔌 Connect logout callback to authAPI
+   // No need for setLogoutCallback anymore as we handle redirection in api.ts
+   // but keeping the effect clean
    useEffect(() => {
-    authAPI.setLogoutCallback(logout);
-    }, [logout]);
+    // Optional: Sync logic if needed
+    }, []);
 
   const value: AuthContextType = {
     user,

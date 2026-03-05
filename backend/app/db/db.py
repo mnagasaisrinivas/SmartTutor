@@ -1,7 +1,10 @@
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass
 
 from app.core.config import settings
+
+load_dotenv()
 
 
 # Defining Base class to create all the tables
@@ -23,9 +26,12 @@ AsyncSessionLocal = async_sessionmaker(
 
 # Creating DB and Tables asynchronsly
 async def create_db_and_tables():
-
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    if settings.INITIALIZE_DB:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+    else:
+        # Just verify connection or skip
+        pass
 
 
 # Database Dependency

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import { useSavedQuestions, useSavedNotes, useDeleteQuestion, useDeleteNote } from "@/hooks/useSavedContent";
+import { SUBJECT_COLORS } from "@/constants";
+import { formatTimeAgo } from "@/lib/utils";
 
 const SavedContent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -34,21 +36,6 @@ const SavedContent = () => {
     deleteNoteMutation.mutate(id);
   };
 
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
-    
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays} days ago`;
-    
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    return `${diffInWeeks} weeks ago`;
-  };
-
   const filteredQuestions = savedQuestions.filter(item =>
     item.question_text.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.subject.toLowerCase().includes(searchTerm.toLowerCase())
@@ -59,19 +46,6 @@ const SavedContent = () => {
     item.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.topic.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const subjectColors: Record<string, string> = {
-    "Mathematics": "bg-blue-100 text-blue-700",
-    "Biology": "bg-green-100 text-green-700",
-    "Chemistry": "bg-purple-100 text-purple-700",
-    "Physics": "bg-orange-100 text-orange-700",
-    "History": "bg-red-100 text-red-700",
-    "English": "bg-yellow-100 text-yellow-700",
-    "Science": "bg-teal-100 text-teal-700",
-    "Geography": "bg-indigo-100 text-indigo-700",
-    "Computer Science": "bg-pink-100 text-pink-700",
-    "Psychology": "bg-cyan-100 text-cyan-700"
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
@@ -162,7 +136,7 @@ const SavedContent = () => {
                               {item.question_text}
                             </CardTitle>
                             <div className="flex items-center gap-3 text-sm text-gray-500">
-                              <Badge className={subjectColors[item.subject] || "bg-gray-100 text-gray-700"}>
+                              <Badge className={SUBJECT_COLORS[item.subject] || "bg-gray-100 text-gray-700"}>
                                 {item.subject}
                               </Badge>
                               <div className="flex items-center">
@@ -256,7 +230,7 @@ const SavedContent = () => {
                               {item.heading}
                             </CardTitle>
                             <div className="flex items-center gap-3 text-sm text-gray-500 mb-2">
-                              <Badge className={subjectColors[item.subject] || "bg-gray-100 text-gray-700"}>
+                              <Badge className={SUBJECT_COLORS[item.subject] || "bg-gray-100 text-gray-700"}>
                                 {item.subject}
                               </Badge>
                               <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">

@@ -1,6 +1,9 @@
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 
+from app.core.exceptions import AIGenerationError
+from app.core.logger import logger
+
 from .groq import llm
 
 
@@ -33,5 +36,6 @@ async def get_structured_explanation(subject: str, question: str) -> Explanation
             )
 
         return structured_explanation
-    except ValueError:
-        return Explanation(title="", steps=[], summary="")
+    except ValueError as e:
+        logger.error(f"AI Generation failed for ask_api: {e}", exc_info=True)
+        raise AIGenerationError("Failed to generate valid explanation from AI.") from e

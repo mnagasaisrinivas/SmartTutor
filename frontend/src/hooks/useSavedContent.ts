@@ -1,6 +1,6 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { aiAPI, SavedQuestion, SavedNote } from '@/services/aiAPI';
+import { aiAPI } from '@/services/aiAPI';
 import { toast } from 'sonner';
 
 export const useSavedQuestions = () => {
@@ -28,9 +28,10 @@ export const useDeleteQuestion = () => {
       queryClient.invalidateQueries({ queryKey: ['savedQuestions'] });
       toast.success("Question deleted successfully");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error('Delete question failed:', error);
-      toast.error(error.response?.data?.message || 'Failed to delete question');
+      const err = error as Error & { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to delete question');
     },
   });
 };
@@ -44,9 +45,10 @@ export const useDeleteNote = () => {
       queryClient.invalidateQueries({ queryKey: ['savedNotes'] });
       toast.success("Note deleted successfully");
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error('Delete note failed:', error);
-      toast.error(error.response?.data?.message || 'Failed to delete note');
+      const err = error as Error & { response?: { data?: { message?: string } } };
+      toast.error(err.response?.data?.message || 'Failed to delete note');
     },
   });
 };

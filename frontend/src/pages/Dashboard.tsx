@@ -12,41 +12,15 @@ import {
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import { useSavedQuestions, useSavedNotes } from "@/hooks/useSavedContent";
+import { SUBJECT_COLORS } from "@/constants";
+import { formatTimeAgo } from "@/lib/utils";
 
 const Dashboard = () => {
   const { data: savedQuestions = [], isLoading: questionsLoading } = useSavedQuestions();
   const { data: savedNotes = [], isLoading: notesLoading } = useSavedNotes();
 
-  const formatTimeAgo = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return "Just now";
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
-    
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 7) return `${diffInDays} days ago`;
-    
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    return `${diffInWeeks} weeks ago`;
-  };
-
   const recentQuestions = savedQuestions.slice(0, 3);
   const recentNotes = savedNotes.slice(0, 2);
-
-  const subjectColors: Record<string, string> = {
-    "Mathematics": "bg-blue-100 text-blue-700",
-    "Biology": "bg-green-100 text-green-700",
-    "Chemistry": "bg-purple-100 text-purple-700",
-    "Physics": "bg-orange-100 text-orange-700",
-    "History": "bg-red-100 text-red-700",
-    "English": "bg-yellow-100 text-yellow-700",
-    "Science": "bg-teal-100 text-teal-700",
-    "Geography": "bg-indigo-100 text-indigo-700",
-    "Computer Science": "bg-pink-100 text-pink-700",
-    "Psychology": "bg-cyan-100 text-cyan-700"
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
@@ -64,61 +38,26 @@ const Dashboard = () => {
 
         {/* Quick Actions */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-            <Link to="/ask-question">
-              <CardHeader className="text-center">
-                <Brain className="h-12 w-12 text-blue-600 mx-auto mb-2" />
-                <CardTitle className="text-lg">Ask a Question</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">
-                  Get instant explanations for any topic
-                </CardDescription>
-              </CardContent>
-            </Link>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-            <Link to="/practice">
-              <CardHeader className="text-center">
-                <Target className="h-12 w-12 text-green-600 mx-auto mb-2" />
-                <CardTitle className="text-lg">Practice Problems</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">
-                  Solve problems to reinforce learning
-                </CardDescription>
-              </CardContent>
-            </Link>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-            <Link to="/quiz">
-              <CardHeader className="text-center">
-                <BookOpen className="h-12 w-12 text-purple-600 mx-auto mb-2" />
-                <CardTitle className="text-lg">Take a Quiz</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">
-                  Test your knowledge with custom quizzes
-                </CardDescription>
-              </CardContent>
-            </Link>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-            <Link to="/study-notes">
-              <CardHeader className="text-center">
-                <FileText className="h-12 w-12 text-orange-600 mx-auto mb-2" />
-                <CardTitle className="text-lg">Study Notes</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-center">
-                  Generate comprehensive study materials
-                </CardDescription>
-              </CardContent>
-            </Link>
-          </Card>
+          {[
+            { to: "/ask-question", icon: Brain, title: "Ask a Question", desc: "Get instant explanations for any topic", color: "text-blue-600" },
+            { to: "/practice", icon: Target, title: "Practice Problems", desc: "Solve problems to reinforce learning", color: "text-green-600" },
+            { to: "/quiz", icon: BookOpen, title: "Take a Quiz", desc: "Test your knowledge with custom quizzes", color: "text-purple-600" },
+            { to: "/study-notes", icon: FileText, title: "Study Notes", desc: "Generate comprehensive study materials", color: "text-orange-600" }
+          ].map((action) => (
+            <Card key={action.to} className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
+              <Link to={action.to}>
+                <CardHeader className="text-center">
+                  <action.icon className={`h-12 w-12 ${action.color} mx-auto mb-2`} />
+                  <CardTitle className="text-lg">{action.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center">
+                    {action.desc}
+                  </CardDescription>
+                </CardContent>
+              </Link>
+            </Card>
+          ))}
         </div>
 
         {/* Recent Activity */}
@@ -157,7 +96,7 @@ const Dashboard = () => {
                           }
                         </p>
                         <div className="flex items-center text-sm text-gray-500">
-                          <span className={`px-2 py-1 rounded-full text-xs mr-2 ${subjectColors[question.subject] || 'bg-gray-100 text-gray-700'}`}>
+                          <span className={`px-2 py-1 rounded-full text-xs mr-2 ${SUBJECT_COLORS[question.subject] || 'bg-gray-100 text-gray-700'}`}>
                             {question.subject}
                           </span>
                           <span>{formatTimeAgo(question.created_at)}</span>
@@ -204,7 +143,7 @@ const Dashboard = () => {
                           {note.heading}
                         </p>
                         <div className="flex items-center text-sm text-gray-500">
-                          <span className={`px-2 py-1 rounded-full text-xs mr-2 ${subjectColors[note.subject] || 'bg-gray-100 text-gray-700'}`}>
+                          <span className={`px-2 py-1 rounded-full text-xs mr-2 ${SUBJECT_COLORS[note.subject] || 'bg-gray-100 text-gray-700'}`}>
                             {note.subject}
                           </span>
                           <span>{formatTimeAgo(note.created_at)}</span>

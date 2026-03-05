@@ -9,6 +9,7 @@ DOTENV = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
 class Settings(BaseSettings):
     # Database Config
     DATABASE_URL: str
+    INITIALIZE_DB: bool = False
 
     # JWT Config
     JWT_SECRET_KEY: SecretStr

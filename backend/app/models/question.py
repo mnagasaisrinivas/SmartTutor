@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List
 
 import sqlalchemy.types as types
@@ -46,7 +47,7 @@ class Question(Base):
         nullable=False,
         default_factory=list,  # Best practice: use factory for mutable defaults
     )
-    created_at: Mapped[DateTime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), init=False
     )
 
